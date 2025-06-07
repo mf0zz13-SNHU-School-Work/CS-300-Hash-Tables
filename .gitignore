@@ -32,3 +32,4 @@
 *.app
 /.vs
 /HashTable/.vs/HashTable
+/BinarySearchTree/.vs/BinarySearchTree
