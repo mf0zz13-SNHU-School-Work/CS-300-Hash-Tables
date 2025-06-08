@@ -84,8 +84,6 @@ public:
  * Default constructor
  */
 BinarySearchTree::BinarySearchTree() {
-	// FixMe (1): initialize housekeeping variables
-	//root is equal to nullptr
 	root = nullptr;
 }
 
@@ -93,18 +91,18 @@ BinarySearchTree::BinarySearchTree() {
  * Destructor
  */
 BinarySearchTree::~BinarySearchTree() {
-	//FixMe (2)
-	// recurse from root deleting every node
+	// Calling helper method to recursively delete all nodes in search tree
 	destroyNode(root);
 	root = nullptr;
 }
 
+// Helper method to postorder traverse and delete nodes.
 void BinarySearchTree::destroyNode(Node* node) {
 	if (node == nullptr)
 		return;
 
-	destroyNode(node->left);
-	destroyNode(node->right);
+	destroyNode(node->left); // recurseve call to left node
+	destroyNode(node->right); // recurseve call to right node
 	delete node;
 }
 
@@ -113,8 +111,7 @@ void BinarySearchTree::destroyNode(Node* node) {
  * Traverse the tree in order
  */
 void BinarySearchTree::InOrder() {
-	// FixMe (3a): In order root
-	// call inOrder function and pass root 
+	// Calling inOrder method passing root as start point
 	inOrder(root);
 }
 
@@ -122,8 +119,7 @@ void BinarySearchTree::InOrder() {
  * Traverse the tree in post-order
  */
 void BinarySearchTree::PostOrder() {
-	// FixMe (4a): Post order root
-	// postOrder root
+	// Calling postOrder method passing root as start point
 	postOrder(root);
 }
 
@@ -131,8 +127,7 @@ void BinarySearchTree::PostOrder() {
  * Traverse the tree in pre-order
  */
 void BinarySearchTree::PreOrder() {
-	// FixMe (5a): Pre order root
-	// preOrder root
+	// Calling preOrder method passing root as start point
 	preOrder(root);
 }
 
@@ -142,16 +137,11 @@ void BinarySearchTree::PreOrder() {
  * Insert a bid
  */
 void BinarySearchTree::Insert(Bid bid) {
-	// FIXME (6a) Implement inserting a bid into the tree
-	// if root equal to null ptr
-	  // root is equal to new node bid
-	// else
-	  // add Node root and bid
-
+	// If root is null then a new node is created and root pointer is set to new node
 	if (root == nullptr)
 		root = new Node(bid);
 	else
-		addNode(root, bid);
+		addNode(root, bid); // Calling addNode function to add node to tree
 
 }
 
@@ -159,8 +149,7 @@ void BinarySearchTree::Insert(Bid bid) {
  * Remove a bid
  */
 void BinarySearchTree::Remove(string bidId) {
-	// FIXME (7a) Implement removing a bid from the tree
-	// remove node root bidID
+	// Calling removeNode, passing root and bidId
 	removeNode(root, bidId);
 }
 
@@ -168,29 +157,22 @@ void BinarySearchTree::Remove(string bidId) {
  * Search for a bid
  */
 Bid BinarySearchTree::Search(string bidId) {
-	// FIXME (8) Implement searching the tree for a bid
-	// set current node equal to root
-
-	// keep looping downwards until bottom reached or matching bidId found
-		// if match found, return current bid
-
-		// if bid is smaller than current node then traverse left
-		// else larger so traverse right
+	// Pointer to current node
 	Node* currNode = root;
 
 	while (currNode != nullptr) {
-		Bid currBid = currNode->bid;
-		if (currBid.bidId == bidId)
+		Bid currBid = currNode->bid; // Setting currBid to bid of the node for the iteration
+		if (currBid.bidId == bidId) // If bidId is a match the bid is returned
 			return currBid;
 		else {
-			if (bidId < currBid.bidId)
+			if (bidId < currBid.bidId) // If the bidId being searched is less than the current bidId the the next node checked is set to left node
 				currNode = currNode->left;
-			else
+			else // If the bidId being searched is not less than the current bidId the the next node checked is set to right node
 				currNode = currNode->right;
 		}
 	}
 	Bid bid;
-	return bid;
+	return bid; // Defalut constructed bid returned if bidId not found
 }
 
 /**
@@ -200,84 +182,70 @@ Bid BinarySearchTree::Search(string bidId) {
  * @param bid Bid to be added
  */
 void BinarySearchTree::addNode(Node* node, Bid bid) {
-	// FIXME (6b) Implement inserting a bid into the tree
-	// if node is larger then add to left
-		// if no left node
-			// this node becomes left
-		// else recurse down the left node
-	// else
-		// if no right node
-			// this node becomes right
-		//else
-			// recurse down the left node
+	// Pointer to keep track of the current node
 	Node* currNode = node;
 
-	while (currNode != nullptr) {
-		if (bid.bidId < currNode->bid.bidId) {
-			if (currNode->left == nullptr) {
+	while (currNode != nullptr) { // While loop to iterate until bid is palced in tree
+		if (bid.bidId < currNode->bid.bidId) { // If the bidId is less than the bidId of current node then the nodes left pointer is examined 
+			if (currNode->left == nullptr) { // If left pointer is null then a new node is created with the bid to be added and placed there
 				currNode->left = new Node(bid);
 				break;
 			}
-			else
+			else // If left pointer is not null then it is selected as the new current node
 				currNode = currNode->left;
 		}
-		else {
-			if (currNode->right == nullptr) {
+		else { // If the bidId is not less than the bidId of the current node then the nodes right pointer is examined
+			if (currNode->right == nullptr) { // If right pointer is null then a new node is created with the bid to be added and placed there
 				currNode->right = new Node(bid);
 				break;
 			}
-			else
+			else // If right pointer is not null then it is slected as the new current node
 				currNode = currNode->right;
 		}
 	}
 }
 void BinarySearchTree::inOrder(Node* node) {
-	// FixMe (3b): Pre order root
-	//if node is not equal to null ptr
-	//InOrder not left
-	//output bidID, title, amount, fund
-	//InOrder right
+	// Quick exit if node passed is null
 	if (node == nullptr)
 		return;
 
+	// Recursive call to left node
 	inOrder(node->left);
 
+	// Output bid information 
 	Bid b = node->bid;
 	cout << b.bidId << ": " << b.title << " | " << b.amount << " | " << b.fund << endl;
 
+	// Recursive call to right node
 	inOrder(node->right);
 
 
 }
 void BinarySearchTree::postOrder(Node* node) {
-	// FixMe (4b): Pre order root
-	//if node is not equal to null ptr
-	//postOrder left
-	//postOrder right
-	//output bidID, title, amount, fund
+	// Quick exit if node passed is null
 	if (node == nullptr)
 		return;
 
+	// Recursive call to left node then right node
 	postOrder(node->left);
 	postOrder(node->right);
 
+	// Output bid information 
 	Bid b = node->bid;
 	cout << b.bidId << ": " << b.title << " | " << b.amount << " | " << b.fund << endl;
 
 }
 
 void BinarySearchTree::preOrder(Node* node) {
-	// FixMe (5b): Pre order root
-	//if node is not equal to null ptr
-	//output bidID, title, amount, fund
-	//postOrder left
-	//postOrder right      
+	// Quick exit if node passed is null   
 	if (node == nullptr)
 		return;
 
+	// Output bid information
 	Bid b = node->bid;
 	cout << b.bidId << ": " << b.title << " | " << b.amount << " | " << b.fund << endl;
 
+	// Recursive call to left node then right node
 	preOrder(node->left);
 	preOrder(node->right);
 }
@@ -286,62 +254,65 @@ void BinarySearchTree::preOrder(Node* node) {
  * Remove a bid from some node (recursive)
  */
 Node* BinarySearchTree::removeNode(Node* node, string bidId) {
-	// FIXME (7b) Implement removing a bid from the tree
-	// if node = nullptr return node
-	// (otherwise recurse down the left subtree)
-	// check for match and if so, remove left node using recursive call 
-	// (otherwise recurse down the right subtree)
-	// check for match and if so, remove right node using recursive call
-	// (otherwise no children so node is a leaf node)
-	// if left node = nullptr && right node = nullptr delete node 
-	// (otherwise check one child to the left)
-	// if left node != nullptr && right node = nullptr delete node 
-	// (otherwise check one child to the right)
-	// if left node = nullptr && right node != nullptr delete node
-	// (otherwise more than one child so find the minimum)
-	// create temp node to right
-	// while left node is not nullptr keep moving temp left
-	// make node bid (right) equal to temp bid (left)
-	// remove right node using recursive call
-	// return node
-	Node* currNode = node;
-	Node* parentNode = nullptr;
 
+	Node* currNode = node; // Pointer to current node
+	Node* parentNode = nullptr; // Pointer to parent node
+
+	// Quick exit if node passed is null
 	if (currNode == nullptr)
 		return node;
+
 	while (currNode != nullptr) {
 		if (currNode->bid.bidId == bidId) {
-			if (currNode->left == nullptr && currNode->right == nullptr) {
-				if (parentNode == nullptr)
+			if (currNode->left == nullptr && currNode->right == nullptr) { // If the node does not have children
+				if (parentNode == nullptr) { // If the parent node is null then the current node is the root and the root pointer is set to null
 					root = nullptr;
-				else if (parentNode->left == currNode)
+					delete currNode;
+				}
+				else if (parentNode->left == currNode) { // If the current node is the left node of its parent the parents left pointer is set to null
 					parentNode->left = nullptr;
-				else if (parentNode->right == currNode)
+					delete currNode;
+				}
+				else if (parentNode->right == currNode) { // If the current node is the right node of its parent the parents right pointer is set to null
 					parentNode->right = nullptr;
+					delete currNode;
+				}
 			}
-			else if (currNode->right == nullptr) {
-				if (parentNode == nullptr)
+			else if (currNode->right == nullptr) { // If the node does not have a right child
+				if (parentNode == nullptr) { // If the parent node is null then the current node is the root and the root is set to the current nodes left child
 					root = currNode->left;
-				else if (parentNode->left == currNode)
+					delete currNode;
+				}
+				else if (parentNode->left == currNode) { // If the current node is the left node of its parent the parents left pointer is set to current nodes left pointer
 					parentNode->left = currNode->left;
-				else
+					delete currNode;
+				}
+				else {
 					parentNode->right = currNode->left;
+					delete currNode;
+				}
 			}
 			else if (currNode->left == nullptr) {
-				if (parentNode == nullptr)
+				if (parentNode == nullptr) {
 					root = currNode->right;
-				else if (parentNode->right == currNode)
+					delete currNode;
+				}
+				else if (parentNode->right == currNode) {
 					parentNode->right = currNode->right;
-				else
+					delete currNode;
+				}
+				else {
 					parentNode->left = currNode->right;
+					delete currNode;
+				}
 			}
 			else {
 				Node* successor = currNode->right;
 				while (successor->left != nullptr)
 					successor = successor->left;
 				Bid successorBid = successor->bid;
-				removeNode(root, successorBid.bidId);
 				currNode->bid = successor->bid;
+				currNode->right = removeNode(currNode->right, successorBid.bidId);
 			}
 			return currNode;
 		}
